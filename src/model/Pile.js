@@ -59,8 +59,9 @@ class Pile {
     }
   }
 
-  getCardsDrawn(firstCardNumber) {
-    const index = this.cards.findIndex(card => +card.number === +firstCardNumber && card.draggable);
+  getCardsDrawn(selectedCard) {
+    const index = this.cards.findIndex(card => card.number === selectedCard.number && card.type === selectedCard.type
+      && card.color === selectedCard.color);
     return this.cards.slice(index);
   }
 }
