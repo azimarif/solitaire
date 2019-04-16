@@ -1,11 +1,10 @@
 import React from 'react';
 import Game from '../model/Game';
 
-import Card from './Card';
 import WastePileView from './WastePileView';
 import WinningSetView from './WinningSetView';
+import PileView from './PileView';
 
-const DECK_UNICODE = '\u{1F0A0}';
 
 class GameView extends React.Component {
   constructor(props) {
@@ -23,56 +22,6 @@ class GameView extends React.Component {
 
   isWon() {
     return this.state.game.winningSet.isWon();
-  }
-
-  createPileCard(card) {
-    const id = [card.type, card.color, card.number].join('_');
-    let unicode = DECK_UNICODE;
-    let classes = 'card hidden';
-    let style = {};
-    if (card.draggable) {
-      unicode = card.unicode;
-      classes = 'card';
-      style = { color: card.color };
-    }
-    return (
-      <Card
-        id={id}
-        key={id}
-        classes={classes}
-        unicode={unicode}
-        dropEvent={this.drop}
-        dragOverEvent={this.allowDrop}
-        dragStart={this.drag}
-        style={style}
-      />
-    );
-  }
-
-  createPile(pile, pileId) {
-    const child = [];
-    pile.cards.forEach(card => child.push(this.createPileCard(card)));
-    if (child.length > 0) {
-      return (
-        <div key={'pile' + pileId} id={'pile_' + pileId} className='pile'>
-          {child}
-        </div>
-      );
-    }
-    return (
-      <div key={'pile' + pileId} id={'pile_' + pileId} className='pile'>
-        <Card
-          id={'blankCard'}
-          key={'blankCard'}
-          classes={'card'}
-          draggable={false}
-          unicode={''}
-          dropEvent={this.drop}
-          dragOverEvent={this.allowDrop}
-          style={{ background: 'transparent' }}
-        />
-      </div>
-    );
   }
 
   render() {
@@ -97,16 +46,16 @@ class GameView extends React.Component {
       </div>
     );
 
-    const element = [];
-    for (let i = 1; i <= 7; i++) {
-      let pile = this.state.game.piles[i];
-      element.push(this.createPile(pile, i));
-    }
     return (
       <div>
         <div className='container'> {upperSection} </div>
         <div id='allPile' className='pile-section'>
-          {element}
+          <PileView
+            piles={this.state.game.piles}
+            dragStart={this.drag.bind(this)}
+            dragOverEvent={this.allowDrop.bind(this)}
+            dropEvent={this.drop.bind(this)}
+          />
         </div>
       </div>
     );
