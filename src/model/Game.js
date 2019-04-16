@@ -16,7 +16,6 @@ class Game {
     this.deck = new Deck();
     this.deck.initializeCards();
     this.initializePileCards();
-    // this.initializeWinningSet();
   }
 
   initializeWinningSet() {

@@ -5,7 +5,7 @@ function Card(props) {
   return (
     <div
       id={props.id}
-      className={props.classes}
+      className={props.classes + ' card'}
       draggable={draggable}
       onDragStart={props.dragStart}
       onDragOver={props.dragOverEvent}
@@ -18,4 +18,4 @@ function Card(props) {
   );
 }
 
-export { Card };
+export default Card;
