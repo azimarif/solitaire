@@ -1,8 +1,9 @@
 import React from 'react';
 import Game from '../model/Game';
 
-import  Card from './card'
-import WastePileView from './wastePileView'
+import Card from './Card';
+import WastePileView from './WastePileView';
+import WinningSetView from './WinningSetView';
 
 const DECK_UNICODE = '\u{1F0A0}';
 
@@ -20,55 +21,8 @@ class GameView extends React.Component {
     this.state.game.setup();
   }
 
-  renderNewCard() {
-    const latestCard = this.state.game.getDrawnCardFromDeck();
-    if(latestCard) {
-    return (
-      <Card
-        unicode={latestCard.unicode}
-        style={{ color: latestCard.color }}
-        clickEvent={this.drawCard}
-        dragStart={this.drag}
-      />
-    );
-    }
-    return (
-      <Card
-        unicode={''}
-        style={{ background:'transparent'}}
-      />
-    );
-  }
-
   isWon() {
     return this.state.game.winningSet.isWon();
-  }
-
-  renderWinningCardSet() {
-    const suits = Object.keys(this.state.game.winningSet.cards);
-    const winningSet = [];
-    suits.forEach(suit => {
-      let lastCard = this.state.game.winningSet.cards[suit][0];
-      let { unicode, color } = lastCard;
-
-      winningSet.push(
-        <Card
-          id={suit}
-          key={suit}
-          classes='box'
-          unicode={unicode}
-          dropEvent={this.drop}
-          dragOverEvent={this.allowDrop}
-          dragStart={this.drag}
-          style={{ color }}
-        />
-      );
-    });
-    return (
-      <div id='cardSet' style={{ display: 'flex', marginLeft:'200px' }}>
-        {winningSet}
-      </div>
-    );
   }
 
   createPileCard(card) {
@@ -123,19 +77,23 @@ class GameView extends React.Component {
 
   render() {
     const won = this.isWon();
-    if(won) {
-      return (
-        <div className='won'>Congratulations, you won!</div>
-      )
+    if (won) {
+      return <div className='won'>Congratulations, you won!</div>;
     }
 
     const upperSection = (
       <div className='upper'>
-      <WastePileView card={this.state.game.getDrawnCardFromDeck()}
-      clickEvent={this.drawCard.bind(this)}
-      dragStart={this.drag.bind(this)}
-      />
-        {this.renderWinningCardSet()}
+        <WastePileView
+          card={this.state.game.getDrawnCardFromDeck()}
+          clickEvent={this.drawCard.bind(this)}
+          dragStart={this.drag.bind(this)}
+        />
+        <WinningSetView
+          suits={this.state.game.winningSet.cards}
+          dragStart={this.drag.bind(this)}
+          dragOverEvent={this.allowDrop.bind(this)}
+          dropEvent={this.drop.bind(this)}
+        />
       </div>
     );
 
@@ -147,7 +105,9 @@ class GameView extends React.Component {
     return (
       <div>
         <div className='container'> {upperSection} </div>
-        <div id='allPile' className='pile-section'>{element}</div>
+        <div id='allPile' className='pile-section'>
+          {element}
+        </div>
       </div>
     );
   }

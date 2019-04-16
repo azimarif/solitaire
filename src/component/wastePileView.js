@@ -1,6 +1,6 @@
 import React from 'react';
 
-import  Card from './card'
+import  Card from './Card'
 const DECK_UNICODE = '\u{1F0A0}';
 
 class WastePileView extends React.Component {
