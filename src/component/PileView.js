@@ -1,7 +1,7 @@
 import React from 'react';
-import Card from './Card'
-
-const DECK_UNICODE = '\u{1F0A0}';
+import Card from './Card';
+import BlankCard from './BlankCard';
+import HiddenCard from './HiddenCard';
 
 class PileView extends React.Component {
   render() {
@@ -9,7 +9,7 @@ class PileView extends React.Component {
   }
 
   createPiles() {
-    let element =[]
+    let element = [];
     for (let i = 1; i <= 7; i++) {
       let pile = this.props.piles[i];
       element.push(this.renderPile(pile, i));
@@ -18,26 +18,21 @@ class PileView extends React.Component {
   }
 
   renderPile(pile, pileId) {
-    const child = [];
-    pile.cards.forEach(card => child.push(this.createPileCard(card)));
-    if (child.length > 0) {
+    const cards = pile.cards.map(card => this.createPileCard(card));
+    if (cards.length > 0) {
       return (
         <div key={'pile' + pileId} id={'pile_' + pileId} className='pile'>
-          {child}
+          {cards}
         </div>
       );
     }
     return (
       <div key={'pile' + pileId} id={'pile_' + pileId} className='pile'>
-        <Card
+        <BlankCard
           id={'blankCard'}
           key={'blankCard'}
-          classes={'card'}
-          draggable={false}
-          unicode={''}
           dropEvent={this.props.dropEvent}
           dragOverEvent={this.props.dragOverEvent}
-          style={{ background: 'transparent' }}
         />
       </div>
     );
@@ -45,28 +40,21 @@ class PileView extends React.Component {
 
   createPileCard(card) {
     const id = [card.type, card.color, card.number].join('_');
-    let unicode = DECK_UNICODE;
-    let classes = 'card hidden';
-    let style = {};
     if (card.draggable) {
-      unicode = card.unicode;
-      classes = 'card';
-      style = { color: card.color };
+      return (
+        <Card
+          id={id}
+          key={id}
+          unicode={card.unicode}
+          dropEvent={this.props.dropEvent}
+          dragOverEvent={this.props.dragOverEvent}
+          dragStart={this.props.dragStart}
+          style={{ color: card.color }}
+        />
+      );
     }
-    return (
-      <Card
-        id={id}
-        key={id}
-        classes={classes}
-        unicode={unicode}
-        dropEvent={this.props.dropEvent}
-        dragOverEvent={this.props.dragOverEvent}
-        dragStart={this.props.dragStart}
-        style={style}
-      />
-    );
+    return <HiddenCard />;
   }
-
 }
 
 export default PileView;

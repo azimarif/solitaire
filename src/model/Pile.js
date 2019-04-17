@@ -46,7 +46,8 @@ class Pile {
   removeCards(cards) {
     const firstCard = cards[0];
     const cardStartIndex = this.cards.findIndex(
-      card => card.number === firstCard.number && card.color === firstCard.color
+      card => card.number === firstCard.number && card.color === firstCard.color &&
+      card.type === firstCard.type
     );
     this.cards = this.cards.slice(0, cardStartIndex);
     this.setLastCardActive();

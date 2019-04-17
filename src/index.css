@@ -96,5 +96,9 @@ body {
 .waste-pile{
   display: flex;
   justify-content: space-between;
-  /* margin-left: -500px; */
+}
+
+.cardset-section {
+  display: flex;
+  margin-left: 200px;
 }
